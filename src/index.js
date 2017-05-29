@@ -1,5 +1,6 @@
 import './index.css';
 import * as THREE from 'three';
+import fragmentShader from './shader.glsl';
 
 var scene;
 var camera;
@@ -24,13 +25,14 @@ function scene_setup() {
 
 function createPlane(scene) {
   const geometry = new THREE.PlaneGeometry( 10, 10 );
-  const material = new THREE.MeshBasicMaterial( { color: 0x00ff00} );
+  // const material = new THREE.MeshBasicMaterial( { color: 0x00ff00} );
+  var material = new THREE.ShaderMaterial({
+    fragmentShader,
+    uniforms
+  });
   const plane = new THREE.Mesh( geometry, material );
   plane.position.z = -1;
-  // var material = new THREE.ShaderMaterial({
-  //   fragmentShader: shaderCode,
-  //   uniforms
-  // });
+
   return plane;
 }
 
