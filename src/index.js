@@ -11,36 +11,71 @@ texture.wrapS = THREE.ClampToEdgeWrapping;
 texture.wrapT = THREE.ClampToEdgeWrapping;
 texture.minFilter = THREE.NearestFilter;
 
-const alphas = [
-  [0.5, 0.6, 1,   1],
-  [0.6, 1,   1,   1],
-  [1,   1,   1,   1],
-  [1,   0.4, 0.5, 0.6],
+const palette = [
+  new THREE.Vector3(30,  67,  59),
+  new THREE.Vector3(149, 122, 139),
+  new THREE.Vector3(191, 143, 46),
+  new THREE.Vector3(146, 75,  73),
+  new THREE.Vector3(137, 123, 60),
+  new THREE.Vector3(160, 139, 108),
+  new THREE.Vector3(75,  61,  86),
+  new THREE.Vector3(75,  61,  86),
 ];
 
-var dummyRGBA = new Uint8Array(4 * 4 * 4);
-for (var y = 0; y < 4; y++) {
-  for (var x = 0; x < 4; x++) {
-    const index = 16 * y + 4 * x;
-    dummyRGBA[index] = 255 * alphas[y][x];
-  }
-}
+const paletteData = [];
+palette.forEach(p => paletteData.push(
+  ...Object.values(p),
+  255
+));
+const paletteTexture = new THREE.DataTexture(
+  Uint8Array.from(paletteData),
+  palette.length,
+  1,
+  THREE.RGBAFormat);
+// paletteTexture.wrapS = THREE.RepeatWrapping;
+// paletteTexture.wrapT = THREE.RepeatWrapping;
+paletteTexture.needsUpdate = true;
+// paletteTexture.magFilter = THREE.NearestFilter;
+// paletteTexture.minFilter = THREE.NearestFilter;
 
-const mapTex = new THREE.DataTexture( dummyRGBA, 4, 4, THREE.RGBAFormat );
-mapTex.needsUpdate = true;
+// const alphas = [
+//   [0.5, 0.6, 1,   1],
+//   [0.6, 1,   1,   1],
+//   [1,   1,   1,   1],
+//   [1,   0.4, 0.5, 0.6],
+// ];
+
+// var dummyRGBA = new Uint8Array(4 * 4 * 4);
+// for (var y = 0; y < 4; y++) {
+//   for (var x = 0; x < 4; x++) {
+//     const index = 16 * y + 4 * x;
+//     dummyRGBA[index] = 255 * alphas[y][x];
+//   }
+// }
+
+// const mapTex = new THREE.DataTexture( dummyRGBA, 4, 4, THREE.RGBAFormat );
+// mapTex.needsUpdate = true;
 
 var uniforms = {
-  texture: {
-    type:'t',
-    value: texture
-  },
+  // texture: {
+  //   type:'t',
+  //   value: texture
+  // },
   res: {
     type: 'v2',
     value: null
   },
-  map: {
+  // map: {
+  //   type: 't',
+  //   value: mapTex
+  // },
+  palette: {
     type: 't',
-    value: mapTex
+    value: paletteTexture
+  },
+  ticks: {
+    type: 'i',
+    value: 0
   }
 };
 
@@ -48,7 +83,7 @@ function scene_setup() {
   const width = document.body.scrollWidth;
   const height = document.body.scrollHeight;
   // uniforms.res.value = new THREE.Vector2(width, height);
-  uniforms.res.value = new THREE.Vector2(612, 380);
+  uniforms.res.value = new THREE.Vector2(800, 400);
   //This is all code needed to set up a basic ThreeJS scene
   //First we initialize the scene and our camera
   scene = new THREE.Scene();
@@ -82,7 +117,13 @@ function render() {
   renderer.render( scene, camera );
 }
 
+let count = 0;
 function updateUniforms() {
+  count++;
+  if (count >= 10) {
+    uniforms.ticks.value = uniforms.ticks.value + 1;
+    count = 0;
+  }
   // uniforms.resolution.value.x = window.innerWidth;
   // uniforms.resolution.value.y = window.innerHeight;
   // uniforms.renderCount.value += 1;
