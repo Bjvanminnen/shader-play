@@ -50,17 +50,18 @@ void main() {
   vec2 center = vec2(0.2, 0.5);
   vec2 center2 = vec2(0.8, 0.5);
 
-  float dist = distance(st, center);
+  float dist = distance(vec2(st.x, mod(st.y + (float(ticks) / 100.0), 1.0)), center);
   float dist2 = distance(st, center2);
 
-  // float mix_amt = f(dist);
-  float mix_amt =0.0;
-  mix_amt = 1.0 - f(dist * 5.0);
+  vec3 left_color = (1.0 - f(dist * 5.0)) * white;
+  vec3 right_color = (1.0 - f2(dist2 * 5.0)) * white;
 
-  float mix_amt2 = 0.0;
-  mix_amt2 = 1.0 - f2(dist2 * 5.0);
-  float mix_amt_total = clamp(mix_amt, 0.0, 1.0) + clamp(mix_amt2, 0.0, 1.0);
+  vec3 mixed = clamp(left_color, 0.0, 1.0) + clamp(right_color, 0.0, 1.0);
+  gl_FragColor = vec4(mixed, 1.0);
+
+
+  // float mix_amt_total = clamp(mix_amt, 0.0, 1.0) + clamp(mix_amt2, 0.0, 1.0);
   // gl_FragColor = vec4(mix(color1, color2, mix_amt), 1.0);
-  gl_FragColor = vec4(mix_amt_total * white, 1.0);
+  // gl_FragColor = vec4(mix_amt_total * white, 1.0);
 
 }
