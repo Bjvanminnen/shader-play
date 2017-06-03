@@ -1,10 +1,13 @@
 import './index.css';
 import * as THREE from 'three';
 import fragmentShader from './shader.glsl';
+import Stats from 'stats.js';
 
 var scene;
 var camera;
 var renderer;
+var stats = new Stats();
+document.body.appendChild( stats.dom );
 
 const texture = new THREE.TextureLoader().load(require('./assets/archer.jpg'));
 texture.wrapS = THREE.ClampToEdgeWrapping;
@@ -73,6 +76,10 @@ var uniforms = {
     type: 't',
     value: paletteTexture
   },
+  paletteRg: {
+    type: 'v3v',
+    value: palette.map(p => p.divide(255))
+  },
   ticks: {
     type: 'i',
     value: 0
@@ -83,7 +90,7 @@ function scene_setup() {
   const width = document.body.scrollWidth;
   const height = document.body.scrollHeight;
   // uniforms.res.value = new THREE.Vector2(width, height);
-  uniforms.res.value = new THREE.Vector2(800, 400);
+  uniforms.res.value = new THREE.Vector2(600, 600);
   //This is all code needed to set up a basic ThreeJS scene
   //First we initialize the scene and our camera
   scene = new THREE.Scene();
@@ -111,10 +118,13 @@ function createPlane(scene) {
 }
 
 function render() {
+  stats.begin();
   updateUniforms();
 
-  requestAnimationFrame( render );
   renderer.render( scene, camera );
+  stats.end();
+
+  requestAnimationFrame( render );
 }
 
 let count = 0;

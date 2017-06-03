@@ -44,6 +44,7 @@
     "raw-loader": "^0.5.1",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
+    "stats.js": "github:mrdoob/stats.js",
     "three.js": "^0.77.1"
   },
   "scripts": {
