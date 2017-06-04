@@ -1,6 +1,6 @@
 uniform vec2 res;
 uniform sampler2D palette;
-uniform int ticks;
+uniform float u_time;
 
 vec3 white = vec3(1);
 
@@ -14,25 +14,29 @@ float plot(vec2 st, float pct){
           smoothstep( pct, pct+0.02, st.y);
 }
 
-// float rand(vec2 co){
-//     return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
-// }
+// Returns 0 if x is outside of range, otherwise x
+float constrain(float x, float minVal, float maxVal) {
+  return step(minVal, x) * (1.0 - step(maxVal, x)) * x;
+}
+vec2 constrain(vec2 v, float minVal, float maxVal) {
+  return step(minVal, v) * (1.0 - step(maxVal, v)) * v;
+}
 
-// void main() {
-//   vec2 pos = gl_FragCoord.xy / res.xy; // * vec2(20.0, 10.0);
-//   if (pos.x > 1.0 || pos.y > 1.0) {
-//     gl_FragColor = vec4(1);
-//     return;
-//   }
+vec3 square(vec2 st, float start, float end) {
+  vec2 constrained = constrain(st, start, end);
+  return vec3(constrained.x * constrained.y);
+}
 
-//   pos = pos * res / 10.0;
+// square centered at 0,0
+vec3 square(vec2 st, float size) {
+  vec2 p = 1. - step(size / 2.0, abs(st));
+  return vec3(p.x * p.y);
+}
 
-//   vec2 ipos = vec2(floor(pos.x), floor(pos.y));
-
-//   float r = rand(ipos * float(ticks));
-//   gl_FragColor = texture2D(palette, vec2(r, 0));
-
-// }
+vec3 square_outline(vec2 st, float size) {
+  float stroke = 0.02;
+  return square(st, size) - square(st, size - stroke);
+}
 
 float f(float x) {
   return pow(x, 3.0);
@@ -46,22 +50,26 @@ void main() {
   if (st.x > 1.0 || st.y > 1.0) {
     return;
   }
+  st = st * 2.0 - 1.0;
 
-  vec2 center = vec2(0.2, 0.5);
-  vec2 center2 = vec2(0.8, 0.5);
+  float time_mod = 50.0;
+  float u_time2 = u_time / time_mod;
 
-  float dist = distance(vec2(st.x, mod(st.y + (float(ticks) / 100.0), 1.0)), center);
-  float dist2 = distance(st, center2);
+  float transx = step(1.0, mod(u_time2, 2.0)) * 2.0 - 1.0;
+  vec2 translate = vec2(transx, 0.0);
 
-  vec3 left_color = (1.0 - f(dist * 5.0)) * white;
-  vec3 right_color = (1.0 - f2(dist2 * 5.0)) * white;
+  // vec2 translate = vec2(sin(u_time / time_mod), 1.0); //cos(u_time / time_mod));
+  // vec2 translate = vec2(step(2.0, mod(u_time, 4.0)));
+  st += translate;
 
-  vec3 mixed = clamp(left_color, 0.0, 1.0) + clamp(right_color, 0.0, 1.0);
-  gl_FragColor = vec4(mixed, 1.0);
+  // vec2 constrained = constrain(st, -0.5, 0.5);
+  // vec3 color = vec3(constrained.x * constrained.y);
+  // vec3 color = vec3(0., 0., abs(st.x * st.y));
+  // vec3 color = square(st, -0.5, 0.2);
+  // vec2 mov = vec2(0.0, -1.0 * (mod(float(1.) / 50.0, 2.0) - 1.0));
+  vec2 mov = vec2(0.0);
+  vec3 color = square_outline(st - mov, 0.3);
 
 
-  // float mix_amt_total = clamp(mix_amt, 0.0, 1.0) + clamp(mix_amt2, 0.0, 1.0);
-  // gl_FragColor = vec4(mix(color1, color2, mix_amt), 1.0);
-  // gl_FragColor = vec4(mix_amt_total * white, 1.0);
-
+  gl_FragColor = vec4(color, 1.0);
 }

@@ -1,6 +1,7 @@
 import './index.css';
 import * as THREE from 'three';
-import fragmentShader from './shader.glsl';
+// import fragmentShader from './shader.glsl';
+import plotter from './plotter.glsl';
 import Stats from 'stats.js';
 
 var scene;
@@ -49,8 +50,8 @@ res: {
     type: 't',
     value: paletteTexture
   },
-  ticks: {
-    type: 'i',
+  u_time: {
+    type: 'f',
     value: 0
   }
 };
@@ -59,7 +60,7 @@ function scene_setup() {
   const width = document.body.scrollWidth;
   const height = document.body.scrollHeight;
   // uniforms.res.value = new THREE.Vector2(width, height);
-  uniforms.res.value = new THREE.Vector2(600, 600);
+  uniforms.res.value = new THREE.Vector2(500, 500);
   //This is all code needed to set up a basic ThreeJS scene
   //First we initialize the scene and our camera
   scene = new THREE.Scene();
@@ -77,7 +78,7 @@ function createPlane(scene) {
   const geometry = new THREE.PlaneGeometry( 10, 10 );
   // const material = new THREE.MeshBasicMaterial( { color: 0x00ff00} );
   var material = new THREE.ShaderMaterial({
-    fragmentShader,
+    fragmentShader: plotter,
     uniforms
   });
   const plane = new THREE.Mesh( geometry, material );
@@ -97,7 +98,7 @@ function render() {
 }
 
 function updateUniforms() {
-  uniforms.ticks.value = uniforms.ticks.value + 1;
+  uniforms.u_time.value = uniforms.u_time.value + 1;
   // uniforms.resolution.value.x = window.innerWidth;
   // uniforms.resolution.value.y = window.innerHeight;
   // uniforms.renderCount.value += 1;
