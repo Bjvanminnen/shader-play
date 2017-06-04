@@ -1,3 +1,5 @@
+export default `
+
 uniform vec2 res;
 uniform float u_time;
 
@@ -59,3 +61,5 @@ void main() {
 
   gl_FragColor = vec4(color, 1.0);
 }
+
+`;
