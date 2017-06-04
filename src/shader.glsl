@@ -45,6 +45,8 @@ float f2(float x) {
   return smoothstep(0.0, 1.0, x);
 }
 
+// A stream of num_sections, where the nth section is on and all others
+// are of. (n is 1 indexed)
 float stratifier(float x, float num_sections, float n) {
   float interval = 1. / num_sections;
   return 1. - step(interval, fract(x / num_sections - interval * (n - 1.0)));
@@ -53,7 +55,7 @@ float stratifier(float x, float num_sections, float n) {
 float square_movement(float x) {
   float y1 = fract(x) * 2. - 1.;
   float y2_4 = step(1.0, mod(x / 2. - 1., 2.0)) * 2.0 - 1.0;
-  float y3 = fract(1.0 - x) * 2. - 1.;
+  float y3 = (1. - fract(x)) * 2. - 1.;
   return y1 * stratifier(x, 4.0, 1.)
     + y2_4 * stratifier(x, 4.0, 2.)
     + y3 * stratifier(x, 4.0, 3.)
@@ -69,15 +71,13 @@ void main() {
 
   float time_mod = 120.0;
   float u_time2 = u_time / time_mod;
-  u_time2 = 2.0;
 
   // TODO - mostly working, but some weird flashes in the corners
   float transx = square_movement(u_time2);
   float transy = square_movement(u_time2 - 1.);
-  vec2 translate = vec2(transx, transy);
-  // vec2 translate = vec2(sin(u_time / time_mod), 1.0); //cos(u_time / time_mod));
-  // vec2 translate = vec2(step(2.0, mod(u_time, 4.0)));
-  st += translate;
+  vec2 translate = vec2(transx, transy) * 0.6;
+
+  st -= translate;
 
   // vec2 constrained = constrain(st, -0.5, 0.5);
   // vec3 color = vec3(constrained.x * constrained.y);
@@ -86,7 +86,6 @@ void main() {
   // vec2 mov = vec2(0.0, -1.0 * (mod(float(1.) / 50.0, 2.0) - 1.0));
   vec2 mov = vec2(0.0);
   vec3 color = square_outline(st - mov, 0.3);
-
 
   gl_FragColor = vec4(color, 1.0);
 }

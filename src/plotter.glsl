@@ -38,7 +38,7 @@ void main() {
 
   float y1 = fract(x) * 2. - 1.;
   float y2_4 = step(1.0, mod(x / 2. - 1., 2.0)) * 2.0 - 1.0;
-  float y3 = fract(1.0 - x) * 2. - 1.;
+  float y3 = (1. - fract(x)) * 2. - 1.;
 
   float y = 0.0;
   // y = step(1.0, mod(x, 2.0)) * 2.0 - 1.0;
@@ -49,6 +49,8 @@ void main() {
     + y2_4 * stratifier(x, 4.0, 2.)
     + y3 * stratifier(x, 4.0, 3.)
     + y2_4 * stratifier(x, 4.0, 4.);
+
+  y = y3;
 
   float sty = (gl_FragCoord.y - bot) / window_y * 4. - 2.;
   if (abs(sty - y) < 0.03) {
