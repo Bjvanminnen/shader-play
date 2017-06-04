@@ -45,6 +45,21 @@ float f2(float x) {
   return smoothstep(0.0, 1.0, x);
 }
 
+float stratifier(float x, float num_sections, float n) {
+  float interval = 1. / num_sections;
+  return 1. - step(interval, fract(x / num_sections - interval * (n - 1.0)));
+}
+
+float square_movement(float x) {
+  float y1 = fract(x) * 2. - 1.;
+  float y2_4 = step(1.0, mod(x / 2. - 1., 2.0)) * 2.0 - 1.0;
+  float y3 = fract(1.0 - x) * 2. - 1.;
+  return y1 * stratifier(x, 4.0, 1.)
+    + y2_4 * stratifier(x, 4.0, 2.)
+    + y3 * stratifier(x, 4.0, 3.)
+    + y2_4 * stratifier(x, 4.0, 4.);
+}
+
 void main() {
   vec2 st = gl_FragCoord.xy / res.xy;
   if (st.x > 1.0 || st.y > 1.0) {
@@ -52,12 +67,13 @@ void main() {
   }
   st = st * 2.0 - 1.0;
 
-  float time_mod = 50.0;
+  float time_mod = 80.0;
   float u_time2 = u_time / time_mod;
 
-  float transx = step(1.0, mod(u_time2, 2.0)) * 2.0 - 1.0;
-  vec2 translate = vec2(transx, 0.0);
-
+  // TODO - mostly working, but some weird flashes in the corners
+  float transx = square_movement(u_time2);
+  float transy = square_movement(u_time2 - 1.);
+  vec2 translate = vec2(transx, transy);
   // vec2 translate = vec2(sin(u_time / time_mod), 1.0); //cos(u_time / time_mod));
   // vec2 translate = vec2(step(2.0, mod(u_time, 4.0)));
   st += translate;

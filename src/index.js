@@ -1,7 +1,7 @@
 import './index.css';
 import * as THREE from 'three';
-// import fragmentShader from './shader.glsl';
-import plotter from './plotter.glsl';
+import fragmentShader from './shader.glsl';
+// import plotter from './plotter.glsl';
 import Stats from 'stats.js';
 
 var scene;
@@ -78,7 +78,7 @@ function createPlane(scene) {
   const geometry = new THREE.PlaneGeometry( 10, 10 );
   // const material = new THREE.MeshBasicMaterial( { color: 0x00ff00} );
   var material = new THREE.ShaderMaterial({
-    fragmentShader: plotter,
+    fragmentShader: fragmentShader,
     uniforms
   });
   const plane = new THREE.Mesh( geometry, material );
