@@ -67,8 +67,9 @@ void main() {
   }
   st = st * 2.0 - 1.0;
 
-  float time_mod = 80.0;
+  float time_mod = 120.0;
   float u_time2 = u_time / time_mod;
+  u_time2 = 2.0;
 
   // TODO - mostly working, but some weird flashes in the corners
   float transx = square_movement(u_time2);
