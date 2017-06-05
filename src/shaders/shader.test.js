@@ -1,5 +1,8 @@
 import { step, fract, mod } from './glsl';
 import { assert } from 'chai';
+import { stratifier, tests as stratifierTests } from './stratifier.glsl';
+
+stratifierTests();
 
 describe('mod', () => {
   it('mod(-1,2)', () => {
@@ -20,33 +23,6 @@ describe('mod', () => {
 
   it('mod(1.5,2)', () => {
     expect(mod(1.5, 2)).toEqual(1.5);
-  });
-});
-
-
-// A stream of num_sections, where the nth section is on and all others
-// are of. (n is 1 indexed)
-// float stratifier(float x, float num_sections, float n) {
-//   float interval = 1. / num_sections;
-//   return 1. - step(interval, fract(x / num_sections - interval * (n - 1.0)));
-// }
-function stratifier(x, num_sections, n) {
-  const interval = 1. / num_sections;
-  return 1. - step(interval, fract(x / num_sections - interval * (n - 1.0)));
-}
-
-const time_stream = [0,1,2,3,4,5,6,7,8,9,10];
-describe('stratifier', () => {
-  it('works for n = 1', () => {
-    const results = time_stream.map(x => stratifier(x, 4, 1));
-    expect(results).toEqual([1,0,0,0,1,0,0,0,1,0,0]);
-  });
-
-  it('works for n = 2', () => {
-    const expected = [1,0,0,0,1,0,0,0,1,0,0];
-
-    const results = time_stream.map(x => stratifier(x, 4, 2));
-    expect(results).toEqual([0,1,0,0,0,1,0,0,0,1,0]);
   });
 });
 

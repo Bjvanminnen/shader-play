@@ -1,7 +1,7 @@
 import './index.css';
 import * as THREE from 'three';
-import shader from './shader.glsl';
-import plotter from './plotter.glsl';
+import shader from './shaders/shader.glsl';
+import plotter from './shaders/plotter.glsl';
 import Stats from 'stats.js';
 
 const fragmentShader = shader;

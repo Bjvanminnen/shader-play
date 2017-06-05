@@ -1,3 +1,5 @@
+import stratifier from './stratifier.glsl';
+
 export default `
 
 uniform vec2 res;
@@ -10,6 +12,8 @@ vec3 white = vec3(1);
 vec3 color1 = vec3(30.0  / 255.0,  67.0 / 255.0,  59.0 / 255.0);
 // light purple
 vec3 color2 = vec3(149.0 / 255.0, 122.0 / 255.0, 139.0 / 255.0);
+
+${stratifier}
 
 float plot(vec2 st, float pct){
   return  smoothstep( pct-0.02, pct, st.y) -
@@ -45,13 +49,6 @@ float f(float x) {
 }
 float f2(float x) {
   return smoothstep(0.0, 1.0, x);
-}
-
-// A stream of num_sections, where the nth section is on and all others
-// are of. (n is 1 indexed)
-float stratifier(float x, float num_sections, float n) {
-  float interval = 1. / num_sections;
-  return 1. - step(interval, fract(x / num_sections - interval * (n - 1.0)));
 }
 
 float square_movement(float x) {
