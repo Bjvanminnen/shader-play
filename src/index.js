@@ -1,10 +1,11 @@
 import './index.css';
 import * as THREE from 'three';
-import shader from './shaders/shader.glsl';
-import plotter from './shaders/plotter.glsl';
+// import shader from './shaders/shader.glsl';
+// import plotter from './shaders/plotter.glsl';
+import random_rows from './shaders/random_rows.glsl';
 import Stats from 'stats.js';
 
-const fragmentShader = shader;
+const fragmentShader = random_rows;
 
 var scene;
 var camera;
@@ -44,7 +45,7 @@ const paletteTexture = new THREE.DataTexture(
 paletteTexture.needsUpdate = true;
 
 var uniforms = {
-res: {
+  res: {
     type: 'v2',
     value: null
   },
@@ -62,7 +63,7 @@ function scene_setup() {
   const width = document.body.scrollWidth;
   const height = document.body.scrollHeight;
   // uniforms.res.value = new THREE.Vector2(width, height);
-  uniforms.res.value = new THREE.Vector2(500, 500);
+  uniforms.res.value = new THREE.Vector2(800, 300);
   //This is all code needed to set up a basic ThreeJS scene
   //First we initialize the scene and our camera
   scene = new THREE.Scene();
@@ -94,6 +95,7 @@ function render() {
   updateUniforms();
 
   renderer.render( scene, camera );
+
   stats.end();
 
   requestAnimationFrame( render );

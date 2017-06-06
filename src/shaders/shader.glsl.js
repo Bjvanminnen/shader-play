@@ -76,15 +76,7 @@ void main() {
   float transy = square_movement(u_time2 - 1.);
   vec2 translate = vec2(transx, transy) * 0.6;
 
-  st -= translate;
-
-  // vec2 constrained = constrain(st, -0.5, 0.5);
-  // vec3 color = vec3(constrained.x * constrained.y);
-  // vec3 color = vec3(0., 0., abs(st.x * st.y));
-  // vec3 color = square(st, -0.5, 0.2);
-  // vec2 mov = vec2(0.0, -1.0 * (mod(float(1.) / 50.0, 2.0) - 1.0));
-  vec2 mov = vec2(0.0);
-  vec3 color = square_outline(st - mov, 0.3);
+  vec3 color = square_outline(st - translate, 0.3);
 
   gl_FragColor = vec4(color, 1.0);
 }
