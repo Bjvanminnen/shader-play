@@ -49,13 +49,17 @@ var uniforms = {
     type: 'v2',
     value: null
   },
-  palette: {
-    type: 't',
-    value: paletteTexture
-  },
+  // palette: {
+  //   type: 't',
+  //   value: paletteTexture
+  // },
   u_time: {
     type: 'f',
     value: 0
+  },
+  mouse: {
+    type: 'v2',
+    value: new THREE.Vector2(0,0)
   }
 };
 
@@ -75,6 +79,9 @@ function scene_setup() {
   renderer = new THREE.WebGLRenderer();
   renderer.setSize(width, height);
   document.body.appendChild(renderer.domElement);
+  renderer.domElement.onmousemove = event => {
+    uniforms.mouse.value = new THREE.Vector2(event.clientX, event.clientY);
+  };
 }
 
 function createPlane(scene) {

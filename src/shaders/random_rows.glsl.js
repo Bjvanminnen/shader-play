@@ -1,6 +1,7 @@
 export default `
 
 uniform vec2 res;
+uniform vec2 mouse;
 uniform float u_time;
 
 /**
@@ -20,6 +21,7 @@ float adjust_rand(float r, float start, float end) {
   return r * (end - start) + start;
 }
 
+
 void main() {
   if (gl_FragCoord.x > res.x || gl_FragCoord.y > res.y) {
     gl_FragColor = vec4(0.3);
@@ -29,16 +31,21 @@ void main() {
   vec2 st = gl_FragCoord.xy / res.xy;
 
   float height = 10.;
-  float block_y = st.y * (res. y / height);
+  float block_y = floor(st.y * (res. y / height));
 
-  float r = rand(floor(block_y));
-  float width = adjust_rand(r, 1., 4.);
+  float width = adjust_rand(rand(block_y), 1., 6.);
 
   // size in px
   vec2 cell_size = vec2(width, height);
 
-  float freq_black = adjust_rand(r, 0.6, 0.8);
-  vec3 color = vec3(step(freq_black, rand(floor(st * res.xy / cell_size))));
+  float velocity_x = adjust_rand(rand(block_y), -0.5, 1.0) / 200.;
+
+  vec2 adjusted_st = st - vec2(velocity_x * u_time, 0.);
+
+  float rand_shade = rand(floor(adjusted_st * res.xy / cell_size));
+
+  float freq_black = adjust_rand(rand(block_y), 1., 1.3) - (mouse.x / res.x);
+  vec3 color = vec3(step(freq_black, rand_shade));
   gl_FragColor = vec4(color, 1.0);
 }
 `;
