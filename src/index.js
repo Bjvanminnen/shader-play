@@ -1,11 +1,24 @@
 import './index.css';
 import * as THREE from 'three';
-// import shader from './shaders/shader.glsl';
-// import plotter from './shaders/plotter.glsl';
+import shader from './shaders/shader.glsl';
+import plotter from './shaders/plotter.glsl';
 import random_rows from './shaders/random_rows.glsl';
+import playing from './shaders/playing.glsl';
+import other from './shaders/other.glsl';
 import Stats from 'stats.js';
+import queryString from 'query-string';
 
-const fragmentShader = random_rows;
+const shaders = {
+  shader,
+  plotter,
+  random_rows,
+  playing,
+  other
+};
+
+const parsed = queryString.parse(window.location.search);
+
+const fragmentShader = shaders[parsed.shader || 'shader'];
 
 var scene;
 var camera;
@@ -66,8 +79,8 @@ var uniforms = {
 function scene_setup() {
   const width = document.body.scrollWidth;
   const height = document.body.scrollHeight;
-  // uniforms.res.value = new THREE.Vector2(width, height);
-  uniforms.res.value = new THREE.Vector2(800, 300);
+  uniforms.res.value = new THREE.Vector2(width, height);
+  // uniforms.res.value = new THREE.Vector2(800, 300);
   //This is all code needed to set up a basic ThreeJS scene
   //First we initialize the scene and our camera
   scene = new THREE.Scene();
@@ -80,7 +93,7 @@ function scene_setup() {
   renderer.setSize(width, height);
   document.body.appendChild(renderer.domElement);
   renderer.domElement.onmousemove = event => {
-    uniforms.mouse.value = new THREE.Vector2(event.clientX, event.clientY);
+    uniforms.mouse.value = new THREE.Vector2(event.clientX, window.innerHeight - event.clientY);
   };
 }
 

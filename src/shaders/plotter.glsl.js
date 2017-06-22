@@ -15,6 +15,25 @@ float stratifier(float x, float num_sections, float n) {
   return 1. - step(interval, fract(x / num_sections - interval * (n - 1.0)));
 }
 
+float sharpstep(float start, float end, float val) {
+  if (start > val || end < val) {
+    return 0.;
+  }
+  float x = val - start;
+  float f = x * (2. * pow(x, 2.) - 3. * x + 2.);
+  return f * (end - start) + start;
+}
+
+float rand(in vec2 _st) {
+    return fract(sin(dot(_st.xy,
+                         vec2(12.9898,78.233)))*
+        43758.5453123);
+}
+
+float rand(float f) {
+  return rand(vec2(f));
+}
+
 void main() {
   float mult_x = 50.;
   float window_y = 200.;
@@ -53,6 +72,13 @@ void main() {
     + y2_4 * stratifier(x, 4.0, 4.);
 
   y = y3;
+
+  y = sharpstep(0., 1.5, x);
+
+  y = rand(floor(x));
+  float r1 = rand(floor(x));
+  float r2 = rand(floor(x + 1.));
+  y = mix(r1, r2, smoothstep(0., 1., fract(x)));
 
   float sty = (gl_FragCoord.y - bot) / window_y * 4. - 2.;
   if (abs(sty - y) < 0.03) {
