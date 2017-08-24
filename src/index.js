@@ -5,6 +5,7 @@ import plotter from './shaders/plotter.glsl';
 import random_rows from './shaders/random_rows.glsl';
 import playing from './shaders/playing.glsl';
 import other from './shaders/other.glsl';
+import circles from './shaders/circles.glsl';
 import Stats from 'stats.js';
 import queryString from 'query-string';
 
@@ -13,7 +14,8 @@ const shaders = {
   plotter,
   random_rows,
   playing,
-  other
+  other,
+  circles
 };
 
 const parsed = queryString.parse(window.location.search);
@@ -77,8 +79,10 @@ var uniforms = {
 };
 
 function scene_setup() {
-  const width = document.body.scrollWidth;
-  const height = document.body.scrollHeight;
+  // const width = document.body.scrollWidth;
+  // const height = document.body.scrollHeight;
+  const width = 600;
+  const height = 600;
   uniforms.res.value = new THREE.Vector2(width, height);
   // uniforms.res.value = new THREE.Vector2(800, 300);
   //This is all code needed to set up a basic ThreeJS scene

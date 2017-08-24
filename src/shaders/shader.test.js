@@ -1,6 +1,6 @@
 import { step, fract, mod } from './glsl';
 import { assert } from 'chai';
-import { stratifier, tests as stratifierTests } from './stratifier.glsl';
+import { stratifier, tests as stratifierTests } from './lib/stratifier.glsl';
 
 stratifierTests();
 

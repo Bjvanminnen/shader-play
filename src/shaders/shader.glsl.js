@@ -1,4 +1,4 @@
-import stratifier from './stratifier.glsl';
+import stratifier from './lib/stratifier.glsl';
 
 export default `
 
