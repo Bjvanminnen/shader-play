@@ -6,6 +6,7 @@ import random_rows from './shaders/random_rows.glsl';
 import playing from './shaders/playing.glsl';
 import other from './shaders/other.glsl';
 import circles from './shaders/circles.glsl';
+import triangle from './shaders/triangle.glsl';
 import Stats from 'stats.js';
 import queryString from 'query-string';
 
@@ -15,7 +16,8 @@ const shaders = {
   random_rows,
   playing,
   other,
-  circles
+  circles,
+  triangle
 };
 
 const parsed = queryString.parse(window.location.search);
