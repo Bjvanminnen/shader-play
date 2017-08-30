@@ -1,11 +1,15 @@
 // import { step, fract } from './glsl';
 
-// A stream of num_sections, where the nth section is on and all others
-// are of. (n is 1 indexed)
 export default `
 // Returns 1 when x is in range min/max, else 0
 float stepclamp(float x, float low, float high) {
   return step(x, high) * (1. - step(x, low));
+}
+`;
+
+export const stroke = `
+float stroke(float x, float y, float width) {
+  return stepclamp(x, y, y + width);
 }
 `;
 

@@ -7,6 +7,7 @@ import playing from './shaders/playing.glsl';
 import other from './shaders/other.glsl';
 import circles from './shaders/circles.glsl';
 import triangle from './shaders/triangle.glsl';
+import playground from './shaders/playground.glsl';
 import Stats from 'stats.js';
 import queryString from 'query-string';
 
@@ -17,7 +18,8 @@ const shaders = {
   playing,
   other,
   circles,
-  triangle
+  triangle,
+  playground,
 };
 
 const parsed = queryString.parse(window.location.search);
