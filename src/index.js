@@ -8,6 +8,7 @@ import other from './shaders/other.glsl';
 import circles from './shaders/circles.glsl';
 import triangle from './shaders/triangle.glsl';
 import playground from './shaders/playground.glsl';
+import map from './shaders/map.glsl';
 import Stats from 'stats.js';
 import queryString from 'query-string';
 
@@ -20,6 +21,7 @@ const shaders = {
   circles,
   triangle,
   playground,
+  map,
 };
 
 const parsed = queryString.parse(window.location.search);
@@ -35,38 +37,42 @@ stats.dom.style.left = '600px';
 document.body.appendChild(stats.dom);
 
 
-// const texture = new THREE.TextureLoader().load(require('./assets/archer.jpg'));
-// texture.wrapS = THREE.ClampToEdgeWrapping;
-// texture.wrapT = THREE.ClampToEdgeWrapping;
-// texture.minFilter = THREE.NearestFilter;
+const texture = new THREE.TextureLoader().load(require('./assets/map.png'));
+texture.wrapS = THREE.ClampToEdgeWrapping;
+texture.wrapT = THREE.ClampToEdgeWrapping;
+texture.minFilter = THREE.NearestFilter;
 
-const palette = [
-  new THREE.Vector3(30,  67,  59),
-  new THREE.Vector3(149, 122, 139),
-  new THREE.Vector3(191, 143, 46),
-  new THREE.Vector3(146, 75,  73),
-  new THREE.Vector3(137, 123, 60),
-  new THREE.Vector3(160, 139, 108),
-  new THREE.Vector3(75,  61,  86),
-  new THREE.Vector3(75,  61,  86),
-];
+// const palette = [
+//   new THREE.Vector3(30,  67,  59),
+//   new THREE.Vector3(149, 122, 139),
+//   new THREE.Vector3(191, 143, 46),
+//   new THREE.Vector3(146, 75,  73),
+//   new THREE.Vector3(137, 123, 60),
+//   new THREE.Vector3(160, 139, 108),
+//   new THREE.Vector3(75,  61,  86),
+//   new THREE.Vector3(75,  61,  86),
+// ];
 
-const paletteData = [];
-palette.forEach(p => paletteData.push(
-  ...Object.values(p),
-  255
-));
-const paletteTexture = new THREE.DataTexture(
-  Uint8Array.from(paletteData),
-  palette.length,
-  1,
-  THREE.RGBAFormat);
-paletteTexture.needsUpdate = true;
+// const paletteData = [];
+// palette.forEach(p => paletteData.push(
+//   ...Object.values(p),
+//   255
+// ));
+// const paletteTexture = new THREE.DataTexture(
+//   Uint8Array.from(paletteData),
+//   palette.length,
+//   1,
+//   THREE.RGBAFormat);
+// paletteTexture.needsUpdate = true;
 
 var uniforms = {
   res: {
     type: 'v2',
     value: null
+  },
+  u_texture: {
+    type: 't',
+    value: texture
   },
   // palette: {
   //   type: 't',
